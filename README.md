@@ -28,6 +28,12 @@ Local Docker setup for running Unsloth with a Zscaler-inspected TLS connection.
 
 The local `work/` directory is mounted at `/workspace/work` in the container.
 
+## Zscaler certificate
+
+`Dockerfile.zscaler` extends the Unsloth image and adds the supplied Zscaler root certificate to the container's trusted certificate store. This allows HTTPS tools inside the container to trust certificates re-signed by Zscaler during TLS inspection.
+
+It does not install a Zscaler client or VPN. The certificate is converted from DER to PEM format during the image build, and the temporary copy is removed afterward. Because the certificate is ignored by Git, it must be provided separately before building.
+
 ## Local services
 
 - Jupyter: `http://localhost:8888`
