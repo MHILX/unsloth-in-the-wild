@@ -1,0 +1,25 @@
+services:
+  unsloth:
+    image: unsloth/unsloth-zscaler:local
+    build:
+      context: .
+      dockerfile: Dockerfile.zscaler
+    container_name: unsloth
+    restart: unless-stopped
+    ports:
+      - "8888:8888"
+      - "8000:8000"
+      - "2222:22"
+    environment:
+      - JUPYTER_PASSWORD=ReexamineRetiredFeistyGuacamole
+      - UNSLOTH_STUDIO_PASSWORD=ReexamineRetiredFeistyGuacamole
+      - HF_HUB_DISABLE_XET=1
+    volumes:
+      - ./work:/workspace/work
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]

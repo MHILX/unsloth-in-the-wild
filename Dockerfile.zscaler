@@ -1,0 +1,15 @@
+FROM unsloth/unsloth
+
+USER root
+
+COPY certs/zscaler-root-ca.cer /tmp/zscaler-root-ca.cer
+
+RUN openssl x509 -inform DER \
+      -in /tmp/zscaler-root-ca.cer \
+      -out /usr/local/share/ca-certificates/zscaler-root-ca.crt \
+ && update-ca-certificates \
+ && rm /tmp/zscaler-root-ca.cer
+
+ENV SSL_CERT_FILE=/etc/ssl/certs/ca-certificates.crt
+ENV REQUESTS_CA_BUNDLE=/etc/ssl/certs/ca-certificates.crt
+ENV CURL_CA_BUNDLE=/etc/ssl/certs/ca-certificates.crt
