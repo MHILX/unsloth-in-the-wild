@@ -14,16 +14,10 @@ Local Docker setup for running Unsloth with a Zscaler-inspected TLS connection.
 
 	The certificate is intentionally ignored by Git and must be supplied separately on each machine.
 
-2. Build the image:
+2. Update the base image, build the image, and start the container:
 
 	```powershell
-	docker compose build
-	```
-
-3. Start the container:
-
-	```powershell
-	docker compose up -d
+	docker compose build --pull && docker compose up -d
 	```
 
 The local `work/` directory is mounted at `/workspace/work` in the container.
