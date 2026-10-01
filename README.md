@@ -66,6 +66,42 @@ The Windows Hugging Face cache at `%USERPROFILE%\.cache\huggingface\hub` is sepa
 
 Studio settings and data are stored separately in the `unsloth_studio_home` volume, mounted at `/opt/unsloth-studio`. Both named volumes are declared external and must already exist before starting this Compose setup. Recreating or removing the container preserves them; deleting the volumes removes their stored data.
 
+## Ollama import
+
+Ollama can import the Windows GGUF file directly; no Docker mount is needed for Ollama. Copying the file into the `Models` folder does not automatically register it with Ollama.
+
+### Modelfile
+
+A `Modelfile` is Ollama's plain-text configuration describing the model to import and any optional generation settings. It is specific to Ollama; Unsloth Studio loads the GGUF directly and does not need it. Creating this configuration does not import, train, or modify the model.
+
+The configuration for the copied Gemma model is located at:
+
+```text
+C:\Users\Mohammed.Hoque\Models\Gemma\Modelfile
+```
+
+The file is named `Modelfile`, without a `.txt` extension, and contains:
+
+```dockerfile
+FROM ./gemma-4-12B-it-qat-UD-Q4_K_XL.gguf
+```
+
+`FROM` points to the existing GGUF. Its relative path is resolved from the Modelfile's directory, not the terminal's working directory.
+
+### Import and run
+
+With Ollama installed and running on Windows, execute these commands in PowerShell:
+
+```powershell
+ollama create gemma-local -f "$env:USERPROFILE\Models\Gemma\Modelfile"
+ollama list
+ollama run gemma-local
+```
+
+`ollama create` imports the weights and registers a named model, `gemma-local`, in Ollama's managed model store. It is not training and uses the existing local GGUF rather than downloading it again. After a successful import, `ollama list` shows the model, and `ollama run` starts an interactive chat.
+
+Import may use approximately 6.7 GB of additional disk space for a managed copy. The original Windows GGUF remains available to Unsloth Studio. A successful import and test response are still needed to confirm this particular GGUF works with the installed Ollama version and available memory.
+
 ## Zscaler certificate
 
 `Dockerfile.zscaler` extends the Unsloth image and adds the supplied Zscaler root certificate to the container's trusted certificate store. This allows HTTPS tools inside the container to trust certificates re-signed by Zscaler during TLS inspection.
