@@ -1,3 +1,5 @@
+name: unsloth
+
 services:
   unsloth:
     image: unsloth/unsloth-zscaler:local
@@ -16,6 +18,10 @@ services:
       - HF_HUB_DISABLE_XET=1
     volumes:
       - ./work:/workspace/work
+      - ./notebooks:/workspace/unsloth-notebooks
+      - "${USERPROFILE}/Models:/workspace/models:ro"
+      - unsloth_studio_home:/opt/unsloth-studio
+      - unsloth_huggingface:/workspace/.cache/huggingface
     deploy:
       resources:
         reservations:
@@ -23,3 +29,9 @@ services:
             - driver: nvidia
               count: all
               capabilities: [gpu]
+
+volumes:
+  unsloth_studio_home:
+    external: true
+  unsloth_huggingface:
+    external: true
