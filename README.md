@@ -102,6 +102,19 @@ ollama run gemma-local
 
 Import may use approximately 6.7 GB of additional disk space for a managed copy. The original Windows GGUF remains available to Unsloth Studio. A successful import and test response are still needed to confirm this particular GGUF works with the installed Ollama version and available memory.
 
+### Alternative: download from Ollama
+
+For Ollama-only use, downloading a packaged model directly is simpler and does not require a custom Modelfile:
+
+```powershell
+ollama pull gemma4:12b-it-qat
+ollama run gemma4:12b-it-qat
+```
+
+The [Ollama Gemma 4 12B QAT package](https://ollama.com/library/gemma4:12b-it-qat) is not necessarily identical to the existing Unsloth `UD-Q4_K_XL` GGUF. Quantization and packaging may differ. Importing the local GGUF preserves the exact weights and quantization already downloaded and avoids another download.
+
+Neither approach automatically shares storage with Unsloth Studio. Keeping the Windows GGUF for Studio plus an Ollama-managed model means two stored copies, whether the Ollama model is imported locally or downloaded directly.
+
 ## Zscaler certificate
 
 `Dockerfile.zscaler` extends the Unsloth image and adds the supplied Zscaler root certificate to the container's trusted certificate store. This allows HTTPS tools inside the container to trust certificates re-signed by Zscaler during TLS inspection.
